@@ -55,6 +55,21 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y ${{ matrix.apt_packages }}
 
+      - name: "Get compiler info hash"
+        shell: bash
+        run: |
+          {
+            if [ "$RUNNER_OS" == "Windows" ]; then
+              cl
+            else
+              gcc --version
+            fi
+          } 2>&1 | awk NF | head -n2 | tee .compiler
+
+          COMPILER_HASH="$(< .compiler | sha256sum | cut -f1 -d' ')"
+          echo "COMPILER_HASH: ${COMPILER_HASH}"
+          echo "::set-env name=COMPILER_HASH::${COMPILER_HASH}"
+
       - name: "vcpkg: create binary cache folder"
         shell: bash
         run: mkdir -p .vcpkg-bc
@@ -62,10 +77,12 @@ jobs:
       - name: "vcpkg: setup binary cache"
         uses: actions/cache@v3
         with:
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
+          key: ${{ runner.os }}-vcpkg-${{ env.COMPILER_HASH }}-${{ hashFiles('**/vcpkg.json') }}
           path: |
             .vcpkg-bc
           restore-keys: |
+            ${{ runner.os }}-vcpkg-${{ env.COMPILER_HASH }}
+            ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
             ${{ runner.os }}-vcpkg-
             ${{ runner.os }}-
 
