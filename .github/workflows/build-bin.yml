@@ -17,6 +17,7 @@ jobs:
             config_profile: win64-2019-rel
             build_profile: win64-2019-rel
             executable_path: build/win64-2019-rel/um-desktop/Release/um-desktop.exe
+            new_exe_name: um-desktop-win64.exe
           - os: ubuntu-20.04
             cc: gcc-10
             cxx: g++-10
@@ -25,6 +26,7 @@ jobs:
             config_profile: default-linux-rel
             build_profile: default-linux-rel
             executable_path: build/linux-rel/um-desktop/um-desktop
+            new_exe_name: um-desktop-linux-x86_64
             apt_packages: >-
               gettext
               libgcrypt20-dev
@@ -107,7 +109,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          cp ${{ matrix.executable_path }} dist/
+          cp ${{ matrix.executable_path }} dist/${{ matrix.new_exe_name }}
           cp -R locale/. dist/
           find dist -name '*.po' -delete
           find dist -name '*.pot' -delete
