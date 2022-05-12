@@ -70,7 +70,7 @@ jobs:
 
           COMPILER_HASH="$(< .compiler | sha256sum | cut -f1 -d' ')"
           echo "COMPILER_HASH: ${COMPILER_HASH}"
-          echo "::set-env name=COMPILER_HASH::${COMPILER_HASH}"
+          echo "COMPILER_HASH=${COMPILER_HASH}" >> $GITHUB_ENV
 
       - name: "vcpkg: create binary cache folder"
         shell: bash
