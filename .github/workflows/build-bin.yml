@@ -62,11 +62,11 @@ jobs:
         run: |
           {
             if [ "$RUNNER_OS" == "Windows" ]; then
-              cl
+              find 'c:/Program Files (x86)' 'c:/Program Files' -iname 'cl.exe' -exec {} \;
             else
               gcc --version
             fi
-          } 2>&1 | awk NF | head -n2 | tee .compiler
+          } 2>&1 | awk NF | tee .compiler
 
           COMPILER_HASH="$(< .compiler | sha256sum | cut -f1 -d' ')"
           echo "COMPILER_HASH: ${COMPILER_HASH}"
