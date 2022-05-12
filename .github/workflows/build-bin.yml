@@ -62,7 +62,9 @@ jobs:
         run: |
           {
             if [ "$RUNNER_OS" == "Windows" ]; then
-              find 'c:/Program Files (x86)' 'c:/Program Files' -iname 'cl.exe' -exec {} \;
+              find 'c:/Program Files (x86)/Microsoft Visual Studio' \
+                   'c:/Program Files/Microsoft Visual Studio' \
+                    -name 'cl.exe' -exec {} \;
             else
               gcc --version
             fi
